@@ -1,0 +1,7 @@
+Mendel
+├───Control
+|   └───Catalogo
+├───Correo
+├───Empleados
+├───Reportes
+└───Script

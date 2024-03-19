@@ -1,0 +1,18 @@
+# Ignorar todo
+*
+
+# Permitir explorar los directorios raíz
+!/
+
+# Incluir carpetas de Script y sus subdirectorios
+!Control/Catalogo/
+!Control/Catalogo/**
+
+!Script/
+!Script/**
+
+!README.md
+
+!.gitignore
+!estructura.txt
+!requirements.txt
