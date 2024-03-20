@@ -1,10 +1,19 @@
-import chardet
+import csv
+import os
 
-# Ejemplo de cómo detectar la codificación de un archivo
-def detect_encoding(file_path):
-    with open(file_path, 'rb') as f:
-        raw_data = f.read()
-    result = chardet.detect(raw_data)
-    return result['encoding']
-
-print(detect_encoding(fr'C:\ProduccionRpa\Mendel\Reportes\20240316\a.csv'))
+try:
+    with open(f'910a2cbf-34b6-435a-9cee-43a4bde1d7b6.csv', 'r') as f:
+        print('Procesando archivo')
+        reader = csv.reader(f)
+        data = [row for row in reader]
+        ##Ordenamos los datos por fecha de la columna 1
+        try:
+            data.sort(key=lambda x: x[1])
+        except:
+            pass
+    with open(f'910a2cbf-34b6-435a-9cee-43a4bde1d7b6.csv', 'w', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerows(data)
+        print('Reporte creado con éxito')
+except:
+    pass

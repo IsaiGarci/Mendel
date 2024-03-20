@@ -7,6 +7,7 @@ import sys
 
 # Asegura que Python pueda encontrar el módulo DOF.py añadiendo su directorio al sys.path
 sys.path.append(r'C:\ProduccionRpa\Mendel\Script\Tasa')
+sys.path.append(r'C:\ProduccionRpa\Mendel\Script\Formato')
 
 # Ahora importa la función o clase DOF desde el módulo DOF.py
 from DOF import DOF
@@ -33,11 +34,15 @@ try:
     for file in os.listdir(f'{reportes}\{hoy}'):
         with open(f'{reportes}\{hoy}\{file}', 'r') as f:
             reader = csv.reader(f)
+            header = next(reader)
             data = [row for row in reader]
+            data.sort(key=lambda x: x[1])
         with open(f'{reportes}\{hoy}\{file}', 'w', newline='', encoding='utf-8') as f:
             writer = csv.writer(f)
+            writer.writerow(header)
             writer.writerows(data)
             print('Reporte creado con éxito')
+
 except:
     pass
 
@@ -83,6 +88,25 @@ def leer_reporte():
                 data.extend([row for row in reader])
     return data
 
+def limpiar_reporte():
+    for archivo in os.listdir(f'{reportes}/{hoy}'):
+        if archivo.endswith('.csv'):
+            datos_limpios = []
+            print(f'{reportes}/{hoy}/{archivo}')
+            with open(f'{reportes}/{hoy}/{archivo}', 'r', encoding='utf-8') as f:
+                reader = csv.reader(f)
+                encabezado = next(reader)  # Guarda el encabezado
+                for row in reader:
+                    if row[11] != 'EXTERNAL_CARD':
+                        datos_limpios.append(row)
+
+            nombre_archivo_limpio = f'limpio_{archivo}'
+            with open(f'{reportes}/{hoy}/{nombre_archivo_limpio}', 'w', newline='', encoding='utf-8') as f_limpio:
+                print(f'Creando archivo {nombre_archivo_limpio}')
+                writer = csv.writer(f_limpio)
+                writer.writerow(encabezado)  # Escribe el encabezado original
+                writer.writerows(datos_limpios)
+
 def calcular_dls(valor, tasa_conversion):
     return round(float(valor) / tasa_conversion, 2)
 
@@ -124,7 +148,6 @@ def crear_data(tasa_conversion):
         Cargo = round(Cargo, 2)
 
         if Folio in folios_aplicados:
-            print(f'El folio {Folio} ya fue aplicado en la poliza')
             continue
         else:
             folios_aplicados.add(Folio)
@@ -176,7 +199,6 @@ def crear_tabla():
             os.makedirs(fr'{empleados}\{folder}\Adjuntos', exist_ok=True)
             os.makedirs(fr'{empleados}\{folder}\Polizas', exist_ok=True) 
             os.makedirs(fr'{empleados}\{folder}\Correos', exist_ok=True) 
-            print(f'La carpeta {folder} creada con exito')
             #pause = input('Presiona enter para continuar')
         except OSError as e:
             print(e)
@@ -314,7 +336,6 @@ def crear_reporte_general(tasa_conversion):
         Cargo = round(Cargo, 2)
         
         if Folio in folios_aplicados:
-            print(f'El folio {Folio} ya fue aplicado en la poliza')
             continue
         else:
             folios_aplicados.add(Folio)
@@ -398,7 +419,6 @@ def crear_reporte_general(tasa_conversion):
         Cargo = round(Cargo, 2)
         
         if Folio in folios_aplicados:
-            print(f'El folio {Folio} ya fue aplicado en la poliza')
             continue
         else:
             folios_aplicados.add(Folio)
@@ -419,15 +439,20 @@ def crear_reporte_general(tasa_conversion):
         mes_anterior = mes_actual - 1
         hoy = datetime.datetime.now().date().strftime('%Y%m%d')
         if Metodo_pago == 'EXTERNAL_CARD' :
-            with open(f'{control}\PagosExternos\pagos_externos_{hoy}.csv', 'a', newline='', encoding='utf-8') as file:
-                writer = csv.writer(file)
-                writer.writerow(row)
+            with open(f'{control}\PagosExternos\pagos_externos_{hoy}.csv', 'r', encoding='utf-8') as file:
+                reader = csv.reader(file)
+                if row in reader:
+                    continue
+                else:
+                    with open(f'{control}\PagosExternos\pagos_externos_{hoy}.csv', 'a', newline='', encoding='utf-8') as file:
+                        writer = csv.writer(file)
+                        writer.writerow(row)
             pass
         else:
             if fecha_mes == mes_actual:
                 if Moneda == 'MXN':
                     Cargo_DLS = calcular_dls(Cargo, tasa_conversion)
-                    if f'{Cargo:.2f}' == '-10.00':
+                    if f'{Cargo:.2f}'.startswith('-'):
                         cargo = f'{Cargo:.2f}'
                         cargo_dls = f"{Cargo_DLS:.2f}"
                         cargo = cargo.replace('-', '')
@@ -458,8 +483,8 @@ def crear_reporte_general(tasa_conversion):
                     writer.writerows(reporte_general_data)
             elif fecha_mes == mes_anterior:
                 if Moneda == 'MXN':
-                    Cargo_DLS = calcular_dls(Cargo, tasa_conversion)
-                    if f'{Cargo:.2f}' == '-10.00':
+                    Cargo_DLS = calcular_dls(Cargo, tasa_conversion)                        
+                    if '-' in f'{Cargo:.2f}':
                         cargo = f'{Cargo:.2f}'
                         cargo_dls = f"{Cargo_DLS:.2f}"
                         cargo = cargo.replace('-', '')
@@ -532,7 +557,8 @@ def verificar_cuentas():
                     for dato in datos_empleados:
                         if dato[42] == extraer_numero_empleado(row[0]):
                             nombre = dato[2]
-                            print(f'La cuenta {row[0]} no existe en el catálogo')
+                            print(f'La cuenta {row[0]} no existe en el catálogo {row}')
+                            
                             cuentas_noexistentes.append((row[0], nombre))
     ruta_mes =fr'{control}\ReporteGeneral\reporte_general_{hoy}-{mes_anterior}.csv'
     if os.path.exists(ruta_mes):
@@ -572,6 +598,7 @@ def extraer_numero_empleado(cuenta_completa, base_cuenta='10550'):
     return numero_empleado
 
 carpetas_control()
+limpiar_reporte()
 crear_tabla()
 falta_adjuntos()
 crear_reporte_general(leer_tasa_conversion())
