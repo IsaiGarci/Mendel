@@ -386,6 +386,7 @@ def crear_reporte_general(tasa_conversion):
         Comercio = row[3]
         Metodo_pago = row[11]
         Cargo = row[4]
+        tipo_pago = row[13]
         Cargo = float(Cargo) if Cargo else 0.00
         Cargo = round(Cargo, 2)
         
@@ -409,7 +410,8 @@ def crear_reporte_general(tasa_conversion):
         mes_actual = hoy.month
         mes_anterior = mes_actual - 1
         hoy = datetime.datetime.now().date().strftime('%Y%m%d')
-        if Metodo_pago == 'EXTERNAL_CARD' :
+        
+        if Metodo_pago == 'EXTERNAL_CARD' or tipo_pago == 'REFUNDED' or tipo_pago == 'DECLINED_PAYMENT' or tipo_pago == 'ADJUSTMENT' or tipo_pago == 'DECLINED_WITHDRAWAL':
             with open(f'{control}\PagosExternos\pagos_externos_{hoy}.csv', 'r', encoding='utf-8') as file:
                 reader = csv.reader(file)
                 if row in reader:

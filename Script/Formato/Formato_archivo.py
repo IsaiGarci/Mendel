@@ -31,7 +31,7 @@ def limpiar_reporte():
                 reader = csv.reader(f)
                 encabezado = next(reader)  # Guarda el encabezado
                 for row in reader:
-                    if row[11] != 'EXTERNAL_CARD':
+                    if row[11] != 'EXTERNAL_CARD' or row[13] == 'REFUNDED' or row[13] == 'DECLINED_PAYMENT' or row[13] == 'ADJUSTMENT' or row[13] == 'DECLINED_WITHDRAWAL':
                         datos_limpios.append(row)
 
             nombre_archivo_limpio = f'Limpio_{archivo}'
