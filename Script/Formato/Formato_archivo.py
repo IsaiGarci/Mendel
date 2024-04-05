@@ -5,12 +5,16 @@ hoy = datetime.datetime.now().date().strftime('%Y%m%d')
 
 #Cambiamos el formato de los archivo a UTF-8
 def formatear():
+    data = []
     try:
         for file in os.listdir(f'{reportes}\{hoy}'):
             with open(f'{reportes}\{hoy}\{file}', 'r') as f:
                 reader = csv.reader(f)
                 header = next(reader)
-                data = [row for row in reader]
+                for row in reader:
+                    if '\n' in row[21]:
+                        row[21] = row[21].replace('\n', ' ')
+                    data.append(row)   
                 data.sort(key=lambda x: x[1])
             with open(f'{reportes}\{hoy}\{file}', 'w', newline='', encoding='utf-8') as f:
                 writer = csv.writer(f)
@@ -32,6 +36,7 @@ def limpiar_reporte():
                 encabezado = next(reader)  # Guarda el encabezado
                 for row in reader:
                     if row[11] != 'EXTERNAL_CARD' or row[13] == 'REFUNDED' or row[13] == 'DECLINED_PAYMENT' or row[13] == 'ADJUSTMENT' or row[13] == 'DECLINED_WITHDRAWAL':
+                        
                         datos_limpios.append(row)
 
             nombre_archivo_limpio = f'Limpio_{archivo}'

@@ -5,8 +5,8 @@ from email.utils import parsedate_tz, mktime_tz
 
 
 ## VARIABLES GENERALES DEL CÓDIGO.
-email_user = 'carlos.vazquez@syscom.mx'
-email_pass = 'sgcn mdbf rgro nsof'
+email_user = 'bot1@syscom.mx'
+email_pass = '&C97&K*w8Buc'
 imap_url = 'imap.gmail.com'
 subject = 'Archivo de comprobantes'
 from_email = 'notifications@mendel.com'
