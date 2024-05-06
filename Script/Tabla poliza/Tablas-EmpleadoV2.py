@@ -282,7 +282,7 @@ def falta_adjuntos():
                         #print(f'Tabla HTML guardada: {archivo_html}')
 
 def crear_reporte_general(tasa_conversion):
-    reporte_general_data = []
+    reporte_general_data = data_cargo = data_abono = []
     folios_aplicados = set()
     print(f"Total de filas a procesar: {len(leer_reporte())}")
     with open(f'{control}/polizas_aplicadas.csv', 'r') as file:
@@ -302,6 +302,7 @@ def crear_reporte_general(tasa_conversion):
         Correo = row[41]
         Comercio = row[3]
         Metodo_pago = row[11]
+        tipo_pago = row[13]
         Cargo = row[4]
         Cargo = float(Cargo) if Cargo else 0.00
         Cargo = round(Cargo, 2)
@@ -334,16 +335,29 @@ def crear_reporte_general(tasa_conversion):
         else:
             Cargo_Pesos = calcular_pesos(Cargo, tasa_conversion)
             Cargo_DLS = Cargo
+        condiciones_invalidas = ['EXTERNAL_CARD', 'REFUNDED', 'DECLINED_PAYMENT', 'ADJUSTMENT', 'DECLINED_WITHDRAWAL']
         
-        # Definición de la estructura de datos
-        data_cargo = ['201031417', 'D', domingo_str, Concepto, '0.00', f"{Cargo_Pesos:.2f}", '0.00', f"{Cargo_DLS:.2f}"]
-        data_abono = [Cuenta, 'D', domingo_str, Concepto, f"{Cargo_Pesos:.2f}", '0.00', f"{Cargo_DLS:.2f}", '0.00']
+        if Metodo_pago in condiciones_invalidas or tipo_pago in condiciones_invalidas:
+            with open(f'{control}\PagosExternos\pagos_externos_{hoy_str}.csv', 'r', encoding='utf-8') as file:
+                reader = csv.reader(file)
+                if row in reader:
+                    continue
+                else:
+                    with open(f'{control}\PagosExternos\pagos_externos_{hoy_str}.csv', 'a', newline='', encoding='utf-8') as file:
+                        writer = csv.writer(file)
+                        writer.writerow(row)
+            pass
+        else:
+            # Definición de la estructura de datos
+            data_cargo = ['201031417', 'D', domingo_str, Concepto, '0.00', f"{Cargo_Pesos:.2f}", '0.00', f"{Cargo_DLS:.2f}"]
+            data_abono = [Cuenta, 'D', domingo_str, Concepto, f"{Cargo_Pesos:.2f}", '0.00', f"{Cargo_DLS:.2f}", '0.00']
 
         # Agregar datos al reporte
         reporte_general_data.append(data_cargo)
         reporte_general_data.append(data_abono)
 
     # Ordenar el reporte general por la fecha
+    print(f'Fecha en reporte general: {reporte_general_data[2]}')
     reporte_general_data.sort(key=lambda x: datetime.datetime.strptime(x[2], '%Y/%m/%d'))
     print(f"Total de filas agregadas a reporte_general_data: {len(reporte_general_data)}")
 
@@ -411,7 +425,10 @@ def crear_reporte_general(tasa_conversion):
         mes_anterior = mes_actual - 1
         hoy = datetime.datetime.now().date().strftime('%Y%m%d')
         
-        if Metodo_pago == 'EXTERNAL_CARD' or tipo_pago == 'REFUNDED' or tipo_pago == 'DECLINED_PAYMENT' or tipo_pago == 'ADJUSTMENT' or tipo_pago == 'DECLINED_WITHDRAWAL':
+        condiciones_invalidas = ['EXTERNAL_CARD', 'REFUNDED', 'DECLINED_PAYMENT', 'ADJUSTMENT', 'DECLINED_WITHDRAWAL']
+        
+        print(f'El método de pago es {Metodo_pago} y el tipo de pago es {tipo_pago}')
+        if Metodo_pago in condiciones_invalidas or tipo_pago in condiciones_invalidas:
             with open(f'{control}\PagosExternos\pagos_externos_{hoy}.csv', 'r', encoding='utf-8') as file:
                 reader = csv.reader(file)
                 if row in reader:
