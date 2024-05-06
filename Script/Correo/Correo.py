@@ -64,7 +64,7 @@ while True:
         found = process_mailbox(M)
         if found:
             break
-        time.sleep(60)  # Espera 60 segundos antes de revisar nuevamente
+        time.sleep(10)  # Espera 60 segundos antes de revisar nuevamente
     else:
         print("ERROR: Imposible abrir bandeja ", rv)
 
