@@ -10,13 +10,13 @@ EMAIL_FOLDER = "INBOX"
 def process_mailbox(M):
     rv, data = M.search(None, '(SUBJECT "Archivo de transacciones")')
     if rv != 'OK' or not data[0]:
-        print("No messages found!")
+        print("No se encontraron mensajes!")
         return False
 
     for num in data[0].split():
         rv, data = M.fetch(num, '(RFC822)')
         if rv != 'OK':
-            print("ERROR getting message", num)
+            print("ERROR obteniendo mensajes", num)
             return False
         
         msg = email.message_from_bytes(data[0][1])
@@ -29,7 +29,7 @@ def process_mailbox(M):
         else:
             body = msg.get_payload(decode=True).decode('utf-8')
         
-        print('Storing message:', num)
+        print('Almacenando correo:', num)
         with open(os.path.join(r'C:\ProduccionRpa\Mendel\Correo', f'index.html'), 'w', encoding='utf-8') as file:
             file.write(body)
 
@@ -48,26 +48,25 @@ M = imaplib.IMAP4_SSL('imap.gmail.com')
 try:
     rv, data = M.login(EMAIL_ACCOUNT, '&C97&K*w8Buc')
 except imaplib.IMAP4.error as e:
-    print(f"LOGIN FAILED!!! {EMAIL_ACCOUNT} - {e}")
+    print(f"Error el iniciar sesión!!! {EMAIL_ACCOUNT} - {e}")
     sys.exit(1)
 
 print(rv, data)
 
 rv, mailboxes = M.list()
 if rv == 'OK':
-    print("Mailboxes:")
-    print(mailboxes)
+    print("Bandeja: INBOX")
 
 while True:
     rv, data = M.select(EMAIL_FOLDER)
     if rv == 'OK':
-        print("Processing mailbox...\n")
+        print("Procesando bandeja: INBOX...\n")
         found = process_mailbox(M)
         if found:
             break
         time.sleep(60)  # Espera 60 segundos antes de revisar nuevamente
     else:
-        print("ERROR: Unable to open mailbox ", rv)
+        print("ERROR: Imposible abrir bandeja ", rv)
 
 M.close()
 M.logout()
