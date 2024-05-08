@@ -2,7 +2,7 @@ import os
 from datetime import datetime, timedelta
 
 
-directorio_descargas = 'C:\\Users\\E-EC1-3753\\Downloads'
+directorio_descargas = 'C:\\Users\\E-EC1-3752\\Downloads'
 tiempo_actual = datetime.now()
 limite_tiempo = tiempo_actual - timedelta(minutes=5)
 

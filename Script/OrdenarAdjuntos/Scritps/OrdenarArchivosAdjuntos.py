@@ -12,11 +12,11 @@ FinishedFile = f'../Data/TerminéArchivosAdjuntos.txt'
 
 ## FUNCIONES DEL CÓDIGO.
 def CleanAuditFile():
-    with open('../Data/ArchivosAdjuntosPorPersona.csv', 'w') as file:
+    with open('../Data/ArchivosAdjuntosPorPersona.csv', 'w', encoding='utf-8') as file:
         file.write('')
 
 def CreateFinishingFile(FilesByUser):
-    with open(FinishedFile, 'w') as file:
+    with open(FinishedFile, 'w', encoding='utf-8') as file:
         file.write('')
 
 def GetFilesByUser(TodaysReport):
@@ -52,7 +52,7 @@ def GetFilesByUser(TodaysReport):
                 file.write(f'{user};{pdf};{xml}\n')
     
     
-    with open(f'../Data/TerminéArchivosAdjuntos.txt', 'a') as file:
+    with open(f'../Data/TerminéArchivosAdjuntos.txt', 'a', encoding='utf-8') as file:
         file.write('Terminé de ordenar los archivos adjuntos\n')
     
     return FilesByUser   

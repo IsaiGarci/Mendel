@@ -2,7 +2,7 @@ import os, csv, datetime, shutil
 import xml.etree.ElementTree as ET
 
 def leer_documento():
-    with open('test.csv', 'r', encoding='utf-8') as f:
+    with open('PagosAutorizados.csv', 'r', encoding='utf-8') as f:
         print('Procesando archivo')
         reader = csv.reader(f, delimiter=';')
         next(reader)  # Skip header
@@ -40,7 +40,7 @@ def abrir_reporte():
 
 def buscar_folios():
     folios_set = leer_documento()
-    subtotal_xml = impuesto_16 = exentos = total_xml = impuesto_retenido = impuesto_traslado = propina = uuid = ish = impuesto_8 = cuenta_menor_16 = 0.0
+    subtotal_xml = impuesto_16 = exentos = importe_total = total_xml = impuesto_retenido = impuesto_traslado = propina = uuid = ish = impuesto_8 = cuenta_menor_16 = ieps = resico = cotejo = diferencia = 0.0
     datos = abrir_reporte()
     datos_encontrados = []
     empleados = r'C:\ProduccionRpa\Mendel\Empleados'  # Corregido para ser una ruta de cadena directamente
@@ -76,11 +76,6 @@ def buscar_folios():
                     pass
                 #elif ##Aquí vamos a validar las categorias con un arreglo de categorias, aquellos que no entren en el arreglo se guardaran para otro documento.
                 else:
-                    print('')
-                    if categoria in categorias_insumos:
-                        with open(r'C:\ProduccionRpa\Mendel\Control\Folios\folios_contabilidad.csv', 'a', newline='', encoding='utf-8') as f:
-                            writer = csv.writer(f)
-                            writer.writerow(dato)
                     datos_xml = buscar_xml(xml)
                     total_xml = datos_xml[0]
                     subtotal_xml = datos_xml[1]
@@ -105,15 +100,18 @@ def buscar_folios():
                         print(xml)
                         if ieps > 0:
                             print('Caso 1')
+                            print(f'Total: {importe_total} - Subtotal: {subtotal_xml} - IVA 16: {impuesto_16} - IEPS: {ieps} - Exentos: {exentos}')
                             subtotal_xml = impuesto_16 / 0.16 #Base del IVA a la 18
                             subtotal_xml = round(subtotal_xml, 2)
-                            exentos = total_xml - (impuesto_16 + subtotal_xml)
+                            exentos = importe_total - (impuesto_16 + subtotal_xml)
                             #print(f'Exentos: {exentos}')
                             #exentos = exentos + ieps
                             #print(f'Exentos + IEPS: {exentos}')
                             ieps = 0.00
                             exentos = round(exentos, 2)
                             cuenta_menor_16 = 8
+                            print(f'Total: {importe_total} - Subtotal: {subtotal_xml} - IVA 16: {impuesto_16} - IEPS: {ieps} - Exentos: {exentos}')
+                            
                             #pause = input()
                             
                         elif impuesto_8 == 0 and impuesto_16 > 0 and ieps == 0:
@@ -205,22 +203,13 @@ def buscar_folios():
                         cuenta_menor = 43
                         #pause = input('No es oxxo')
                     
-
                     #Validamos la propina haciendo la resta del total del XML y el total del reporte, verificamos si la propina es el 10% o el 15%. En caso de exceder el 15% se toma como propina el 15%
                     if importe_total != subtotal_xml:
                         propina,subtotal_xml,impuesto_16 = validar_propina(total_xml, importe_total,subtotal_xml,impuesto_16)
-
-
-                        
+                       
                             
                     propina = round(propina, 2)
-                    if propina == -0.01:
-                        propina = 0.00
-                    if propina == 0.01:
-                        propina = 0.00
-
-                    
-                    cotejo = ((subtotal_xml + impuesto_16 + impuesto_8 + ish + exentos + propina) - resico)
+                    cotejo = ((subtotal_xml + impuesto_16 + impuesto_8 + ish + exentos + propina + ieps) - resico)
                     cotejo = round(cotejo, 2)
                     diferencia = importe_total - cotejo
                     diferencia = round(diferencia, 2)
@@ -263,10 +252,11 @@ def buscar_folios():
                             #copiar_archivos(folio_dato, xml, pdf)
                         #else:
                             #print(f'No se encontraron archivos para copiar: Folio {folio_dato}')
-                    """if folio_dato == 'BB0978C4':
-                        pause = input()"""
+                    if folio_dato == 'E7BC54B9':
+                        print(f'Folio: {folio_dato} - Nombre: {nombre} - Concepto: {concepto} - Cuenta Mayor: {cuenta_mayor} - Cuenta Menor: {cuenta_menor} - Subtotal: {subtotal_xml} - IVA 16: {impuesto_16} - Cuenta Mayor: {cuenta_mayor} - Cuenta Menor: {cuenta_menor_16} - IVA 8: {impuesto_8} - Cuenta Mayor: {cuenta_mayor} - Cuenta Menor: {cuenta_menor_8} - Propina: {propina} - IEPS: {ieps} - Resico: {resico} - Exentos: {exentos} - ISH: {ish} - Total: {total_xml} - Cotejo: {cotejo} - Diferencia: {diferencia} - Dolar: {dolar} - UUID: {uuid} - Cuenta 105: {cuenta} - Complemento 50: {comercio} - PDF: {pdf} - XML: {xml}')
+                        pause = input()
                     datos_encontrados.append([folio_dato, nombre, concepto, cuenta_gasto, cuenta_menor, subtotal_xml, impuesto_16, '107', cuenta_menor_16, impuesto_8, '107', cuenta_menor_8, propina, ieps, resico, exentos, ish, importe_total, cotejo, diferencia, dolar, uuid, '105', cuenta, pdf, xml])
-                    subtotal_xml = impuesto_16 = exentos = importe_total = total_xml = impuesto_retenido = impuesto_traslado = propina = uuid = ish = impuesto_8 = cuenta_menor_16 = 0.0
+                    subtotal_xml = impuesto_16 = exentos = importe_total = total_xml = impuesto_retenido = impuesto_traslado = propina = uuid = ish = impuesto_8 = cuenta_menor_16 = ieps = resico = cotejo = diferencia = 0.0
                     pass
                     
     return datos_encontrados
@@ -294,15 +284,18 @@ def valor_dolar():
         return tasa
 
 def validar_propina(total_xml, total_reporte,subtotal_xml,impuesto_16):
+    print('Propinas')
     total_xml = float(total_xml)
     total_reporte = float(total_reporte)
     propina = total_reporte - total_xml
+    print(propina)
     porcentaje = (propina / total_xml) * 100
+    
     if porcentaje > 16:
         propina = total_xml * 0.16
     if propina == -0.01:
         propina = 0.00
-    if propina < 0:
+    if propina < -1:
         subtotal_xml = total_reporte / 1.16
         impuesto_16 = subtotal_xml * 0.16
         impuesto_16 = round(impuesto_16, 2)
@@ -370,6 +363,7 @@ def buscar_xml(ruta, nivel=0):
                         importe = float(traslado.attrib.get('Importe'))
                         if nombre_emisor == 'CADENA COMERCIAL OXXO':
                             if impuesto == '002':
+                                print(f'Importes: {importe}')
                                 impuesto_16 += importe
                             elif impuesto == '003':
                                 ieps += importe
@@ -377,13 +371,16 @@ def buscar_xml(ruta, nivel=0):
                             if impuesto == '002':
                                 impuesto_16 += importe
                             elif impuesto == '003':
-                                impuesto_8 += importe
+                                ieps += importe
         elif elemento.tag == f'{implocal_ns}ImpuestosLocales':
             traslados_locales = elemento.findall(f'{implocal_ns}TrasladosLocales')
             for traslado in traslados_locales:
-                if traslado.attrib.get('ImpLocTrasladado') == 'ISH':
+                if traslado.attrib.get('ImpLocTrasladado') == 'ISH' or traslado.attrib.get('ImpLocTrasladado') == 'IMPUESTO POR SERVICIOS DE HOSPEDAJE' or traslado.attrib.get('ImpLocTrasladado') == 'I.S.H.' or traslado.attrib.get('ImpLocTrasladado') == 'Impuesto Sobre Hospedaje':
                     ish += float(traslado.attrib.get('Importe', '0.0'))
-
+                if traslado.atrib.get('ImpLocTrasladado') == 'ISA':
+                    ish += float(traslado.attrib.get('Importe', '0.0'))
+                if traslado.atrib.get('ImpLocTrasladado') == 'DSA':
+                    ish += float(traslado.attrib.get('Importe', '0.0'))
         # Itera sobre los subelementos del elemento actual
         for subelemento in elemento:
             procesar_elemento(subelemento, nivel + 1)
