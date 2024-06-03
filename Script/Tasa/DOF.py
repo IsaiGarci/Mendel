@@ -36,3 +36,5 @@ def DOF():
                 print("No hay datos disponibles para la fecha especificada.")
     except requests.exceptions.RequestException as e:
         print("Error en la petición:", e)
+
+DOF()

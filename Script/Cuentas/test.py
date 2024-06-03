@@ -1,6 +1,6 @@
 import os, csv, datetime
 
-def leer_documento():
+"""def leer_documento():
     with open('PagosAceptadosParaPólizas20240327.csv', 'r', encoding='utf-8') as f:
         print('Procesando archivo')
         reader = csv.reader(f, delimiter=';')
@@ -331,4 +331,38 @@ def main():
     verificacion_cuentas()
 
 if __name__ == '__main__':
-    main()
+    main()"""
+
+folios = ["BC5AE055","ACC1BAC2","26A16A3D","234A0DB0","4C6E8531","91BB4F8A","9006E8AE","3B7B8B79","2333A13D","C5DE7BBD","0A79FB07","511DE6DC",
+          "6F387B1D","88CF6D80","A6CFD668","B257B964","EA59036C","4F5413F2","BAF38B31","FCAB1CE3","EF3D39CF","2FD6F8F9","8FC2BE54","E87AA2F2",
+          "58850424","E970944C","9E9B0FBE","7AE3AD0E","101FD81E","C4A91648","603E0D5B","3BD599BE","0FD9CE59","88ADD000","9DAA49C0","5F61F021",
+          "7E9B2FC2","63706658","66160F16","25038008","D3FB74A5","6D276605","CCC4A673","C1A61B56","58D7267C","00568A4A","E3112D91","70A20139",
+          "0B20FC09","AF13F713","D927590E","A7E5C16D","D8A6132F","218256C5","E4208C18","70F2FE90","24D2D57B","3549C344","70B1B9A0","549DA93C",
+          "781E67E9","94214B40","ABFD69A0","481CB751","A44ED118","CD0989A6","EA2253E8","515E02F5","01BB1308","8691F4D1","1DF40822","524EB608",
+          "1A444C8E","4A6A9AE9","724CE971","86F47A9F","64FC4353","089ED010","35668137","16A1603E","05E76ECB","3EDFEBA1","82204A16","69D8CA22",
+          "DA24A965","D58D479F","7D5AD344","99908E7C","18353135","61473AF9","3EEECB6F","70C0300A"]    
+    
+uuid_list = []
+acumulador1 = acumulador2 = acumulador3 = 0
+with open(r'C:\ProduccionRpa\Mendel\Control\Tabla\20240523\tabla2-test.csv', 'r', encoding='utf-8') as f:
+    reader = csv.reader(f)
+    headers = next(reader)
+    data = []
+    for row in reader:
+        folio = row[0]
+        uuid = row[22]
+        data.append([folio, uuid])
+        acumulador1 += 1
+        
+with open(r'C:\ProduccionRpa\Mendel\Control\Aplicados\folio_gastos_aplicados.csv', 'r', encoding='utf-8') as f:
+    reader = csv.reader(f)
+    next(reader)
+    for row in reader:
+        folios.append(row[0])
+        acumulador2 += 1
+
+for row in data:
+    if row[0] in folios:
+        acumulador3 += 1
+
+print(f'Folios Autorizados: {acumulador1}\nFolios aplicados: {acumulador2}\nPorcentaje de avance de folios aplicados: {round((acumulador3/acumulador1)*100)}%')

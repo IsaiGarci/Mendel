@@ -10,7 +10,7 @@ FilesPath = '../Data/ArchivosAdjuntosPorPersona.csv'
 
 ## FUNCIONES DEL CÓDIGO.
 def CreateFinishingFile():
-    with open('../Data/TerminéMoverAdjuntos.txt', 'w') as file:
+    with open('../Data/TerminéMoverAdjuntos.txt', 'w', encoding='utf-8') as file:
         file.write('Terminé de mover los archivos adjuntos\n')
 
 def MoveFiles():     
