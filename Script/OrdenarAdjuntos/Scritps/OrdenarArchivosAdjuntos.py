@@ -52,7 +52,11 @@ def GetFilesByUser(TodaysReport):
                 file.write(f'{user};{pdf};{xml}\n')
     
     
+<<<<<<< HEAD
     with open(f'../Data/TermineArchivosAdjuntos.txt', 'a', encoding='utf-8') as file:
+=======
+    with open(f'../Data/TerminéArchivosAdjuntos.txt', 'a', encoding='utf-8') as file:
+>>>>>>> c1d0193436b12cbc8fb8e8ff454c527477627512
         file.write('Terminé de ordenar los archivos adjuntos\n')
     
     return FilesByUser   
