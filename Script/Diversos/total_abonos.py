@@ -40,7 +40,7 @@ for file in os.listdir(tabla2_test_path):
         tabla2_test_path = fr'{tabla2_test_path}\{file}'
         break
 folios_aplicados_path = r'C:\ProduccionRpa\Mendel\Control\Aplicados\folio_gastos_aplicados.csv'
-totales_path = r'totales.csv'
+totales_path = r'total_abonos.csv'
 
 # Leer los archivos
 data = leer_tabla(tabla2_test_path)

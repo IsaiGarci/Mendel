@@ -7,8 +7,8 @@ hoy = datetime.datetime.now().date().strftime('%Y%m%d')
 def reporte_conciliacion():
     control = r'C:\ProduccionRpa\Mendel\Control'
     conciliacion_hoy = fr'{control}\Conciliacion\{hoy}'
-    fecha_inicio =  datetime.datetime(2024, 3, 1, 0, 0)
-    fecha_fin = datetime.datetime(2024, 3, 31, 23, 59)
+    fecha_inicio =  datetime.datetime(2024, 5, 1, 0, 0)
+    fecha_fin = datetime.datetime(2024, 5, 31, 23, 59)
 
     #Abrimos reporte de hoy
     for archivo in os.listdir(f'{reportes}/{hoy}'):
@@ -65,7 +65,7 @@ def reporte():
                 
     with open(f'{conciliacion_hoy}/Reporte.csv', 'w', newline='', encoding='utf-8') as f:
         header = ['Total importes', 'Total mendel','Diferencia']
-        total_mendel = 1164276.01
+        total_mendel = 1331654.99
         writer = csv.writer(f)
         writer.writerow(header)
         writer.writerow([total_factura, total_mendel, round((total_factura - total_mendel), 2)])

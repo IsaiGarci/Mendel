@@ -113,9 +113,7 @@ def buscar_folios():
                             subtotal_xml = impuesto_16 / 0.16 #Base del IVA
                             subtotal_xml = round(subtotal_xml, 2)
                             exentos = importe_total - (impuesto_16 + subtotal_xml)
-                            #print(f'Exentos: {exentos}')
-                            #exentos = exentos + ieps
-                            #print(f'Exentos + IEPS: {exentos}')
+
                             ieps = 0.00
                             exentos = round(exentos, 2)
                             cuenta_menor_16 = 8
@@ -132,27 +130,12 @@ def buscar_folios():
                             cuenta_menor_16 = 8
                             print(f'Valores: Total: {importe_total} - Subtotal: {subtotal_xml} - IVA 16: {impuesto_16}')
                             #pause = input()
-                            
-                        #pause = input('Es oxxo')
-                        
-                            
+
                     if comercio != 'CADENA COMERCIAL OXXO':
                         print('No es OXXO')
                         print(f'Comercio: {comercio}')
                         print(xml)
-                        
-                        # Si el importe facturado es mayor al importe total, se calcula el IVA con el importe total                        
-                        """if importe_facturado > importe_total:
-                            print(f'Importe facturado mayor al importe total. Comercio: {comercio}')
-                            total = total_xml / 1.16
-                            total_xml = round(total, 2)
-                            impuesto_16 = total * 0.16
-                            impuesto_16 = round(impuesto_16, 2)
-                            propina = 0.00
-                            subtotal_xml = subtotal_xml - impuesto_16
-                            print(f'Nuevos valores: Total: {total_xml} - IVA 16: {impuesto_16} - Propina: {propina}')"""
-                            
-                        #Validamos aquellos que no son oxxo y tienen IEPS
+
                         if categoria == 'Supermercados' and ieps > 0:
                             print('Caso 2')
                             
@@ -230,8 +213,7 @@ def buscar_folios():
                             with open('insumos.csv', 'a', newline='', encoding='utf-8') as f:
                                 writer = csv.writer(f)
                                 writer.writerow([folio_dato, nombre, empleado, concepto, categoria])
-                    #Validamos la propina haciendo la resta del total del XML y el total del reporte, verificamos si la propina es el 10% o el 15%. En caso de exceder el 15% se toma como propina el 15%
-                    #if importe_total != subtotal_xml:
+
                     propina,subtotal_xml,impuesto_16 = validar_propina(total_xml, importe_total,subtotal_xml,impuesto_16)
                        
                             
@@ -240,16 +222,6 @@ def buscar_folios():
                     cotejo = round(cotejo, 2)
                     diferencia = importe_total - cotejo
                     diferencia = round(diferencia, 2)
-                    
-                    """if diferencia > 0.0 or diferencia < 0.0:
-                        total = total_xml / 1.16
-                        #total_xml = round(total, 2)
-                        impuesto_16 = total * 0.16
-                        impuesto_16 = round(impuesto_16, 2)
-                        cotejo = ((subtotal_xml + impuesto_16 + impuesto_8 + ish + exentos + propina) - resico)
-                        cotejo = round(cotejo, 2)
-                        diferencia = importe_total - cotejo
-                        diferencia = round(diferencia, 2)"""
                         
                     total_xml = round(total_xml, 2)
                     subtotal_xml = round(subtotal_xml, 2)
@@ -270,27 +242,7 @@ def buscar_folios():
                             
                     if nombre == 'Insumos Adrian Zetina':
                         cuenta = '9000601'
-                    # Definimos una función auxiliar para copiar los archivos PDF y XML
-                    # def copiar_archivos(folio_dato, xml, pdf):
-                        #directorio_folio = os.path.join(direccion_escritorio, folio_dato)
-                        # Verificamos si el directorio existe, si no, lo creamos
-                        #if not os.path.exists(directorio_folio):
-                            #os.makedirs(directorio_folio)
-                        # Copiamos el XML y el PDF al directorio del folio
-                        #shutil.copy(xml, directorio_folio)
-                        #shutil.copy(pdf, directorio_folio)
-                        #print(f'Archivos copiados para el folio: {folio_dato}')
 
-                    # Lógica para determinar si se deben copiar los archivos basada en tus condiciones
-                    #if comercio == 'CADENA COMERCIAL OXXO' or comercio == '7-ELEVEN MEXICO' or resico > 0 or ish > 0:
-                        # Solo intentamos copiar si ambos archivos, PDF y XML, están presentes
-                        #if os.path.isfile(xml) and os.path.isfile(pdf):
-                            #copiar_archivos(folio_dato, xml, pdf)
-                        #else:
-                            #print(f'No se encontraron archivos para copiar: Folio {folio_dato}')
-                    """if folio_dato == '262E57ED':
-                        print(f'Folio: {folio_dato} - Nombre: {nombre} - Concepto: {concepto} - Cuenta Mayor: {cuenta_mayor} - Cuenta Menor: {cuenta_menor} - Subtotal: {subtotal_xml} - IVA 16: {impuesto_16} - Cuenta Mayor: {cuenta_mayor} - Cuenta Menor: {cuenta_menor_16} - IVA 8: {impuesto_8} - Cuenta Mayor: {cuenta_mayor} - Cuenta Menor: {cuenta_menor_8} - Propina: {propina} - IEPS: {ieps} - Resico: {resico} - Exentos: {exentos} - ISH: {ish} - Total: {total_xml} - Cotejo: {cotejo} - Diferencia: {diferencia} - Dolar: {dolar} - UUID: {uuid} - Cuenta 105: {cuenta} - Complemento 50: {comercio} - PDF: {pdf} - XML: {xml}')
-                        pause = input()"""
                     datos_encontrados.append([folio_dato, nombre, concepto, cuenta_gasto, cuenta_menor, subtotal_xml, impuesto_16, '107', cuenta_menor_16, impuesto_8, '107', cuenta_menor_8, propina, ieps, resico, exentos, ish, importe_total, cotejo, diferencia, dolar, uuid, '105', cuenta, pdf, xml])
                     subtotal_xml = impuesto_16 = exentos = importe_total = total_xml = impuesto_retenido = impuesto_traslado = propina = uuid = ish = impuesto_8 = cuenta_menor_16 = ieps = resico = cotejo = diferencia = 0.0
                     pass
@@ -456,17 +408,7 @@ def crear_tabla():
         for row in data:
             #print(f'Archivo numero: {archivos}')
             referencia = f'Men{año}{mes}{dia}-{contador_nombre}'
-            # Reordenamos los datos para que coincidan con el orden de las columnas y agregamos nuevos datos
-            #El 107 pertenece a la cuenta mayor de IVA, la cuenta menor nos dice si es del 16 o el 8
-            """if row[0] == 'B83160F1':
-
-                print(f'Folio: {row[0]} - Nombre: {row[1]} - Concepto: {row[2]} - Cuenta Mayor: {row[3]} - Cuenta Menor: {row[4]} - Subtotal: {row[5]} - IVA 16: {row[6]} - Cuenta Mayor: {row[7]} - Cuenta Menor: {row[8]} - IVA 8: {row[9]} - Cuenta Mayor: {row[10]} - Cuenta Menor: {row[11]} - Propina: {row[12]} - IEPS: {row[13]} - Resico: {row[14]} - Exentos: {row[15]} - ISH: {row[16]} - Total: {row[17]} - Cotejo: {row[18]} - Diferencia: {row[19]} - Dolar: {row[20]} - UUID: {row[21]} - Cuenta 105: {row[22]} - Complemento 50: {row[23]} - PDF: {row[24]} - XML: {row[25]}')
-                
-                pause = input()
-            if row[0] == '8875482D':
-                print(f'Folio: {row[0]} - Nombre: {row[1]} - Concepto: {row[2]} - Cuenta Mayor: {row[3]} - Cuenta Menor: {row[4]} - Subtotal: {row[5]} - IVA 16: {row[6]} - Cuenta Mayor: {row[7]} - Cuenta Menor: {row[8]} - IVA 8: {row[9]} - Cuenta Mayor: {row[10]} - Cuenta Menor: {row[11]} - Propina: {row[12]} - IEPS: {row[13]} - Resico: {row[14]} - Exentos: {row[15]} - ISH: {row[16]} - Total: {row[17]} - Cotejo: {row[18]} - Diferencia: {row[19]} - Dolar: {row[20]} - UUID: {row[21]} - Cuenta 105: {row[22]} - Complemento 50: {row[23]} - PDF: {row[24]} - XML: {row[25]}')
-                
-                pause = input()"""     
+           
             datos_reordenados = [row[0], row[1], referencia, row[2], row[3], row[4],row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12],row[13], row[14], row[15], row[16], row[17], row[18], row[19], row[20], row[21], row[22], row[23], row[24],row[25]]
             writer.writerow(datos_reordenados)
             archivos += 1

@@ -119,8 +119,10 @@ def crear_data(tasa_conversion):
         Cargo = round(Cargo, 2)
 
         if Folio in folios_aplicados:
+            print(f'El folio {Folio} ya fue aplicado')
             continue
         else:
+            print(f'El folio {Folio} no ha sido aplicado')
             folios_aplicados.add(Folio)
                     
         if Nombre not in adjuntos_data:
