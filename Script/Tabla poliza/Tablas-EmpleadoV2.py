@@ -14,7 +14,9 @@ from DOF import DOF
 from Formato_archivo import Formato_archivo as formatear
 
 # Rutas de archivos y carpetas
-hoy = datetime.datetime.now().date().strftime('%Y%m%d')
+
+hoy = datetime.datetime.now().date().strftime('%Y%m%d') ##AA/MM/DD
+
 numero_semana = datetime.datetime.now().isocalendar()[1]
 año = str(datetime.datetime.now().year)[-2:]
 dia = datetime.datetime.now().day
