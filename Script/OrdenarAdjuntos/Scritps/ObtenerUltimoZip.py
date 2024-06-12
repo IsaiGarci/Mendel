@@ -15,5 +15,5 @@ for archivo in os.listdir(directorio_descargas):
         tiempo_modificacion = datetime.fromtimestamp(os.path.getmtime(ruta_completa))
         if tiempo_modificacion > limite_tiempo:
             print(f'Archivo encontrado: {archivo}, modificado en: {tiempo_modificacion}')
-            with open('../Data/UbicacionUltimoZip.txt', 'w', encoding='utf-8') as file:
+            with open(r'C:\ProduccionRpa\Mendel\Script\OrdenarAdjuntos\Data\UbicacionUltimoZip.txt', 'w', encoding='utf-8') as file:
                 file.write(ruta_completa)
