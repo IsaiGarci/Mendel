@@ -3,15 +3,15 @@ import os, shutil
 
 
 ## VARIABLES GENERALES DEL CÓDIGO.
-Attachments = '../Data/Adjuntos'
-UsersFolderPath = '../../../Empleados'
-FilesPath = '../Data/ArchivosAdjuntosPorPersona.csv'
+Attachments = r'C:\ProduccionRpa\Mendel\Script\OrdenarAdjuntos\Data\Adjuntos'
+UsersFolderPath = r'C:\ProduccionRpa\Mendel\Empleados'
+FilesPath = r'C:\ProduccionRpa\Mendel\Script\OrdenarAdjuntos\Data\ArchivosAdjuntosPorPersona.csv'
 
 
 ## FUNCIONES DEL CÓDIGO.
 def CreateFinishingFile():
-    with open('../Data/TerminéMoverAdjuntos.txt', 'w', encoding='utf-8') as file:
-        file.write('Terminé de mover los archivos adjuntos\n')
+    with open(r'C:\ProduccionRpa\Mendel\Script\OrdenarAdjuntos\Data\TermineArchivosAdjuntos.txt', 'w',newline='', encoding='utf-8') as file:
+        file.write('Terminé de mover los archivos adjuntos')
 
 def MoveFiles():     
     with open(FilesPath, 'r', encoding='utf-8') as f:

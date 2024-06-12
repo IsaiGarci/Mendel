@@ -6,13 +6,13 @@ import glob
 
 ## VARIABLES GENERALES DEL CÓDIGO.
 TodaysDate = datetime.now().strftime("%Y%m%d")
-TodaysReport = f'../../../Reportes/{TodaysDate}/Reporte-*.csv'
-FinishedFile = f'../Data/TermineArchivosAdjuntos.txt'
+TodaysReport = fr'C:\ProduccionRpa\Mendel\Reportes\{TodaysDate}\Reporte-*.csv'
+FinishedFile = r'C:\ProduccionRpa\Mendel\Script\OrdenarAdjuntos\Data\TermineArchivosAdjuntos.txt'
 
 
 ## FUNCIONES DEL CÓDIGO.
 def CleanAuditFile():
-    with open('../Data/ArchivosAdjuntosPorPersona.csv', 'w', encoding='utf-8') as file:
+    with open(r'C:\ProduccionRpa\Mendel\Script\OrdenarAdjuntos\Data\ArchivosAdjuntosPorPersona.csv', 'w', encoding='utf-8') as file:
         file.write('')
 
 def CreateFinishingFile(FilesByUser):
@@ -39,7 +39,7 @@ def GetFilesByUser(TodaysReport):
                 FilesByUser[name]['PDFs'].extend(PdfFiles)
                 FilesByUser[name]['XMLs'].extend(XmlFiles)
     count = 0
-    with open('../Data/ArchivosAdjuntosPorPersona.csv', 'a', encoding='utf-8') as file:
+    with open(r'C:\ProduccionRpa\Mendel\Script\OrdenarAdjuntos\Data\ArchivosAdjuntosPorPersona.csv', 'a', encoding='utf-8') as file:
         for user, files in FilesByUser.items():
             max_pairs = max(len(files['PDFs']), len(files['XMLs']))
             for i in range(max_pairs):
@@ -52,11 +52,7 @@ def GetFilesByUser(TodaysReport):
                 file.write(f'{user};{pdf};{xml}\n')
     
     
-<<<<<<< HEAD
-    with open(f'../Data/TermineArchivosAdjuntos.txt', 'a', encoding='utf-8') as file:
-=======
-    with open(f'../Data/TerminéArchivosAdjuntos.txt', 'a', encoding='utf-8') as file:
->>>>>>> c1d0193436b12cbc8fb8e8ff454c527477627512
+    with open(r'C:\ProduccionRpa\Mendel\Script\OrdenarAdjuntos\Data\TermineArchivosAdjuntos.txt', 'a', encoding='utf-8') as file:
         file.write('Terminé de ordenar los archivos adjuntos\n')
     
     return FilesByUser   
